@@ -42,7 +42,7 @@ class DataExtractor:
         return None, None
 
     def extract_locations(self, header, body):
-        location_regx = re.compile(location_regx_str)
+        location_regx = re.compile(location_regx_str, re.IGNORECASE)
         locations = {match.group(1) for match in location_regx.finditer(header)}
         locations |= {match.group(1) for match in location_regx.finditer(body)}
         self.known_locations |= locations # we treat locations found in header as real locations

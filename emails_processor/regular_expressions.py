@@ -3,8 +3,9 @@ header_body_regx_str = r'([\s\S]+(?:\b.+\b:.+\n\n|\bAbstract\b:))([\s\S]*)'
 paragraph_regx_str = r'(?<=\n\n)(?:(?:\s*\b.+\b:(?:.|\s)+?)|(\s{0,4}[A-Za-z0-9](?:.|\n)+?\s*))(?=\n\n)'
 not_sentence_regx_str = r'^[A-Za-z0-9](?:.|\n)+(?:\.|\?|!|:)$'
 
-location_regx_str = r'(?:\b(?:Place|Location|WHERE|PLACE)\b:\s*)(.*)'
+location_regx_str = r'(?:\b(?:Place|Location|Where)\b:\s*)(.*)'
 pos_location_regx_str = r'((?:(?:(?:\w*?{\*(?:NNP|CD)\*})|(?:room{\*.+?\*}))\s*)*)'
+
 speaker_regx_str = r'(?:\b(?:Speaker|Name)\b:\s*)(.*?,|.*)'
 pos_person_regx_str = r'((?:\w+?{\*NNP\*}\s{0,3}){1,5})'
 pos_titled_person_regx_str = r'((?:Dr|Mr|Ms|Mrs|Prof|Sir|Professor)\.?{\*NNP\*}\s{0,3}(?:\w+?{\*NNP\*}\s{0,3}){1,5})'
