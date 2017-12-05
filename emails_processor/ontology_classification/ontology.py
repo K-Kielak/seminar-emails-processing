@@ -83,13 +83,13 @@ class Ontology:
         return self.ontology
 
     def get_topic(self, key, ontology=None):
+        if type(ontology) is list:
+            return None
+
         if not ontology:
             ontology = self.ontology
 
         keys = ontology.keys()
-        if keywords_label in keys:
-            return None
-
         if key in keys:
             return ontology[key]
 
