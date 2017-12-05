@@ -4,47 +4,48 @@ from emails_processor.data_extraction.text_processor import TextProcessor
 
 keywords_label = 'keywords'
 seminars_label = 'seminars'
+others_label = 'Others'
 
 seminars_ontology = {
             'Computer Science': {
                 'Software Engineering': {
-                    keywords_label: ['software', 'object-oriented'],
-                    seminars_label: []
+                    keywords_label: {'software', 'object-oriented'},
+                    seminars_label: {}
                 },
 
                 'AI': {
-                    keywords_label: ['artificial', 'intelligence', 'machine learning', 'ai', 'robotics', 'vision',
+                    keywords_label: {'artificial', 'intelligence', 'machine learning', 'ai', 'robotics', 'vision',
                                      'nlp', 'natural language processing', 'ieee', 'navigation', 'robot', 'humanoid',
-                                     'autonomous', 'knowledge', 'language', 'decision',' navigation'],
-                    seminars_label: []
+                                     'autonomous', 'knowledge', 'language', 'decision',' navigation'},
+                    seminars_label: {}
                 },
 
                 'HCI': {
-                    keywords_label: ['human', 'user', 'friendly', 'interaction', 'graphics', 'fun', 'usable', 'design'],
-                    seminars_label: []
+                    keywords_label: {'human', 'user', 'friendly', 'interaction', 'graphics', 'fun', 'usable', 'design'},
+                    seminars_label: {}
                 },
 
                 'Parallel Computing': {
-                    keywords_label: ['parallel', 'distributed', 'network', 'synchronization', 'efficient',
-                                     'synchronous', 'asynchronous', 'thread', 'multi'],
-                    seminars_label: []
+                    keywords_label: {'parallel', 'distributed', 'network', 'synchronization', 'efficient',
+                                     'synchronous', 'asynchronous', 'thread', 'multi'},
+                    seminars_label: {}
                 },
 
                 'Cyber Security': {
-                    keywords_label: ['breach', 'cryptography', 'backdoor', 'encryption', 'decryption', 'hacking'],
-                    seminars_label: []
+                    keywords_label: {'breach', 'cryptography', 'backdoor', 'encryption', 'decryption', 'hacking'},
+                    seminars_label: {}
                 },
 
-                'Other': {
-                    keywords_label: [],
-                    seminars_label: []
+                others_label: {
+                    keywords_label: {},
+                    seminars_label: {}
                 },
 
-                keywords_label: ['computer', 'information', 'digital']
+                keywords_label: {'computer', 'information', 'digital'}
             },
 
-            'Other': {
-                keywords_label: []
+            others_label: {
+                keywords_label: {}
             }
         }
 
@@ -57,11 +58,26 @@ class Ontology:
 
     @staticmethod
     def get_topic_keywords(topic):
-        return topic[keywords_label]
+        top_keywords = topic[keywords_label]
+        children_keywords = set()
+        for key, obj in topic.items():
+            if type(obj) is list:
+                continue
+
+            children_keywords |= Ontology.get_topic_keywords(obj)
+
+        return top_keywords | children_keywords
 
     @staticmethod
     def get_topic_seminars(topic):
         return topic[seminars_label]
+
+    def add_to_others(self, seminar, ontology=None):
+        if not ontology:
+            ontology = self.ontology
+
+        ontology[others_label].update(seminar)
+        return ontology
 
     def get_ontology(self):
         return self.ontology
@@ -71,7 +87,7 @@ class Ontology:
             ontology = self.ontology
 
         keys = ontology.keys()
-        if 'keywords' in keys:
+        if keywords_label in keys:
             return None
 
         if key in keys:
@@ -95,8 +111,8 @@ class Ontology:
         return ontology
 
     def _preprocess_keywords(self, keywords):
-        lemmatized_keywords = [self.lemmatizer.lemmatize(keyword) for keyword in keywords]
-        return [TextProcessor.clean(keyword) for keyword in lemmatized_keywords]
+        lemmatized_keywords = {self.lemmatizer.lemmatize(keyword) for keyword in keywords}
+        return {TextProcessor.clean(keyword) for keyword in lemmatized_keywords}
 
 
 
