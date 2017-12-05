@@ -2,10 +2,10 @@ import re
 
 from dateutil import parser as time_parser
 from nltk.tokenize import sent_tokenize
+
 from emails_processor.data_extraction.data_extractor import DataExtractor
 from emails_processor.data_extraction.xml_processor import XMLProcessor
-
-from emails_processor.tagging.regular_expressions import *
+from emails_processor.regular_expressions import *
 
 
 class SeminarsTagger:

@@ -4,7 +4,7 @@ import nltk
 from dateutil import parser as date_parser
 
 from emails_processor.data_extraction.xml_processor import XMLProcessor
-from emails_processor.tagging.regular_expressions import *
+from emails_processor.regular_expressions import *
 
 
 class DataExtractor:
