@@ -3,3 +3,6 @@
 
 # pycache
 __pycache__/
+
+# output
+emails_processor/tagging/text.txt
