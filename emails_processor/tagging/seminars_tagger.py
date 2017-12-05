@@ -3,7 +3,7 @@ import re
 from dateutil import parser as time_parser
 from nltk.tokenize import sent_tokenize
 from emails_processor.data_extraction.data_extractor import DataExtractor
-from emails_processor.data_extraction.xml_processor import XMLProcessor
+from emails_processor.data_extraction.text_processor import TextProcessor
 
 from emails_processor.regular_expressions import *
 
@@ -46,7 +46,7 @@ class SeminarsTagger:
         return text.strip()
 
     def tag_sentences(self, text):
-        text_parts = XMLProcessor.split_on_tags(text, 'paragraph')
+        text_parts = TextProcessor.split_on_xml_tags(text, 'paragraph')
         sentences = []
         for part in text_parts:
             sentences.extend(sent_tokenize(part.strip()))

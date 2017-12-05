@@ -3,7 +3,7 @@ import re
 import nltk
 from dateutil import parser as date_parser
 
-from emails_processor.data_extraction.xml_processor import XMLProcessor
+from emails_processor.data_extraction.text_processor import TextProcessor
 from emails_processor.regular_expressions import *
 
 
@@ -19,11 +19,11 @@ class DataExtractor:
         self.known_speakers = set()
         self.known_locations = set()
         for sem in seminars:
-            self.known_speakers |= XMLProcessor.extract_tags_content(sem, 'speaker', return_as_set=True)
-            self.known_locations |= XMLProcessor.extract_tags_content(sem, 'location', return_as_set=True)
+            self.known_speakers |= TextProcessor.extract_xml_tags_content(sem, 'speaker', return_as_set=True)
+            self.known_locations |= TextProcessor.extract_xml_tags_content(sem, 'location', return_as_set=True)
 
-        self.known_locations = {XMLProcessor.clean(loc.lower()) for loc in self.known_locations}
-        self.known_speakers = {XMLProcessor.clean(spk.lower()) for spk in self.known_speakers}
+        self.known_locations = {TextProcessor.clean(loc.lower()) for loc in self.known_locations}
+        self.known_speakers = {TextProcessor.clean(spk.lower()) for spk in self.known_speakers}
 
     def extract_times(self, header):
         start_end_regx = re.compile(start_end_time_regx_str.format(time_regx_str))
@@ -52,7 +52,7 @@ class DataExtractor:
         tagged_locations = {match.group(1) for match in pos_location_regx.finditer(tagged_body)}
         tagged_locations = {re.sub(pos_tags_regx_str, '', location).strip() for location in tagged_locations}
         tagged_locations = \
-            set(filter(lambda loc: XMLProcessor.clean(loc.lower()) in self.known_locations, tagged_locations))
+            set(filter(lambda loc: TextProcessor.clean(loc.lower()) in self.known_locations, tagged_locations))
         return locations | tagged_locations
 
     def extract_speakers(self, header, body):
@@ -65,7 +65,7 @@ class DataExtractor:
         pos_person_regx = re.compile(pos_person_regx_str)
         tagged_people = {match.group(1) for match in pos_person_regx.finditer(tagged_body)}
         people = {re.sub(pos_tags_regx_str, '', person).strip() for person in tagged_people}
-        people = set(filter(lambda person: XMLProcessor.clean(person.lower()) in self.known_speakers, people))
+        people = set(filter(lambda person: TextProcessor.clean(person.lower()) in self.known_speakers, people))
 
         pos_titled_person_regx = re.compile(pos_titled_person_regx_str)
         tagged_titled_people = {match.group(1) for match in pos_titled_person_regx.finditer(tagged_body)}

@@ -1,6 +1,6 @@
 from tabulate import tabulate
 
-from emails_processor.data_extraction.xml_processor import XMLProcessor
+from emails_processor.data_extraction.text_processor import TextProcessor
 from emails_processor.tagging.seminars_tagger import SeminarsTagger
 
 
@@ -17,11 +17,12 @@ def evaluate(tagsets, test_tagsets):
                 true_positivies += 1
             else:
                 false_positives += 1
+                print(tag + ' (wrong, seminar {})'.format(i))
 
         for test_tag in test_set:
             if test_tag not in set:
                 false_negatives += 1
-                print(test_tag + " (not catched)")
+                print(test_tag + ' (not catched, seminar {})'.format(i))
 
     # print(true_positivies)
     # print(false_negatives)
@@ -46,24 +47,24 @@ tagged_test_files_root = '../../data/test_tagged/'
 tagged_test_seminars = [open('{}{}.txt'.format(tagged_test_files_root, i), 'r').read() for i in test_files_range]
 
 # get tags content for test data
-test_paragraphs = [XMLProcessor.extract_tags_content(tagged_seminar, 'paragraph',
-                                                     return_clean=True, return_as_set=True)
+test_paragraphs = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'paragraph',
+                                                          return_clean=True, return_as_set=True)
                    for tagged_seminar in tagged_test_seminars]
 
-test_sentences = [XMLProcessor.extract_tags_content(tagged_seminar, 'sentence',
-                                                    return_clean=True, return_as_set=True)
+test_sentences = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'sentence',
+                                                         return_clean=True, return_as_set=True)
                   for tagged_seminar in tagged_test_seminars]
 
-test_stimes = [XMLProcessor.extract_tags_content(tagged_seminar, 'stime', return_as_set=True)
+test_stimes = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'stime', return_as_set=True)
                for tagged_seminar in tagged_test_seminars]
 
-test_etimes = [XMLProcessor.extract_tags_content(tagged_seminar, 'etime', return_as_set=True)
+test_etimes = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'etime', return_as_set=True)
                for tagged_seminar in tagged_test_seminars]
 
-test_locations = [XMLProcessor.extract_tags_content(tagged_seminar, 'location', return_clean=True, return_as_set=True)
+test_locations = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'location', return_clean=True, return_as_set=True)
                   for tagged_seminar in tagged_test_seminars]
 
-test_speakers = [XMLProcessor.extract_tags_content(tagged_seminar, 'speaker', return_clean=True, return_as_set=True)
+test_speakers = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'speaker', return_clean=True, return_as_set=True)
                  for tagged_seminar in tagged_test_seminars]
 
 
@@ -75,24 +76,24 @@ untagged_files = [open('{}{}.txt'.format(untagged_files_root, i), 'r') for i in 
 tagger = SeminarsTagger(training_files, names_file)
 tagged_seminars = [tagger.tag_seminar(seminar) for seminar in untagged_files]
 
-paragraphs = [XMLProcessor.extract_tags_content(tagged_seminar, 'paragraph',
-                                                return_clean=True, return_as_set=True)
+paragraphs = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'paragraph',
+                                                     return_clean=True, return_as_set=True)
               for tagged_seminar in tagged_seminars]
 
-sentences = [XMLProcessor.extract_tags_content(tagged_seminar, 'sentence',
-                                               return_clean=True, return_as_set=True)
+sentences = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'sentence',
+                                                    return_clean=True, return_as_set=True)
              for tagged_seminar in tagged_seminars]
 
-stimes = [XMLProcessor.extract_tags_content(tagged_seminar, 'stime', return_as_set=True)
+stimes = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'stime', return_as_set=True)
           for tagged_seminar in tagged_seminars]
 
-etimes = [XMLProcessor.extract_tags_content(tagged_seminar, 'etime', return_as_set=True)
+etimes = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'etime', return_as_set=True)
           for tagged_seminar in tagged_seminars]
 
-locations = [XMLProcessor.extract_tags_content(tagged_seminar, 'location', return_clean=True, return_as_set=True)
+locations = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'location', return_clean=True, return_as_set=True)
              for tagged_seminar in tagged_seminars]
 
-speakers = [XMLProcessor.extract_tags_content(tagged_seminar, 'speaker', return_clean=True, return_as_set=True)
+speakers = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'speaker', return_clean=True, return_as_set=True)
             for tagged_seminar in tagged_seminars]
 
 # then
