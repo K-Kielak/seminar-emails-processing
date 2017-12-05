@@ -2,9 +2,9 @@ import re
 
 from dateutil import parser as time_parser
 from nltk.tokenize import sent_tokenize
-
 from emails_processor.data_extraction.data_extractor import DataExtractor
 from emails_processor.data_extraction.xml_processor import XMLProcessor
+
 from emails_processor.regular_expressions import *
 
 
@@ -14,10 +14,11 @@ class SeminarsTagger:
 
     def tag_seminar(self, seminar_file):
         seminar = seminar_file.read().strip('\n -*')
+
         # separate heading from body
         header, body = re.search(header_body_regx_str, seminar).groups()
-        # print(self.data_extraction.tag_parts_of_speech(body))
         header = header.rstrip('\n')
+
         # extracting data
         stime, etime = self.data_extractor.extract_times(header)
         locations = self.data_extractor.extract_locations(header, body)
@@ -80,7 +81,7 @@ class SeminarsTagger:
 
     def tag_speakers(self, text, speakers):
         for spk in speakers:
-            insensitive_spk = re.compile(r'({})'.format(re.escape(spk)), re.IGNORECASE)
+            insensitive_spk = re.compile(r'({})'.format(re.escape(spk)))
             # print(insensitive_loc)
             text = re.sub(insensitive_spk, r'<speaker>\1</speaker>', text)
 

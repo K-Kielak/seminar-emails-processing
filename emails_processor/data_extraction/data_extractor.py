@@ -62,6 +62,11 @@ class DataExtractor:
         self.known_speakers |= speakers
 
         tagged_body = self.tag_parts_of_speech(body)
+        pos_person_regx = re.compile(pos_person_regx_str)
+        tagged_people = {match.group(1) for match in pos_person_regx.finditer(tagged_body)}
+        people = {re.sub(pos_tags_regx_str, '', person).strip() for person in tagged_people}
+        people = set(filter(lambda person: XMLProcessor.clean(person.lower()) in self.known_speakers, people))
+
         pos_titled_person_regx = re.compile(pos_titled_person_regx_str)
         tagged_titled_people = {match.group(1) for match in pos_titled_person_regx.finditer(tagged_body)}
         titled_people = {re.sub(pos_tags_regx_str, '', person).strip() for person in tagged_titled_people}
@@ -77,7 +82,7 @@ class DataExtractor:
         #                                        for person_part in person.split(' ')
         #                                        for titled_person in titled_people), people))
 
-        return speakers | titled_people # | verb_people
+        return speakers | titled_people | people # | verb_people
 
     # def extract_ners(self, tagged_body):
     #     pos_ner_regx = re.compile(pos_ner_regx_str)
