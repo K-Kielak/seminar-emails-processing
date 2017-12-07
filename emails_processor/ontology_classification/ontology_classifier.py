@@ -1,7 +1,8 @@
 import re
 import nltk
-from collections import Counter
+from nltk.tokenize import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
+from collections import Counter
 from emails_processor.data_extraction.text_processor import TextProcessor
 from emails_processor.ontology_classification.ontology_processor import OntologyProcessor
 
@@ -48,7 +49,7 @@ class OntologyClassifier:
     def pprint(self, indentation_count=0):
         OntologyProcessor.pprint_seminars_count(self.ontology, indentation_count)
 
-    # Try to classify seminar based on its header
+    # Try to classify seminar based on the header
     def _analyze_header(self, header):
         type_regx = re.compile(type_regx_str, re.IGNORECASE)
         significant_lines = [match.group(1) for match in type_regx.finditer(header)]
@@ -61,7 +62,9 @@ class OntologyClassifier:
         significant_tokens = Counter(significant_tokens)
         return OntologyProcessor.find_best_topic('Top', self.ontology, significant_tokens)
 
-    # doesn't do anything at the moment TODO implement
+    # Try to specify classification based on the body
     def _analyze_body(self, body, topic_name, topic):
-        return topic_name, topic
+        tokens = word_tokenize(body)
+        tokens = Counter(tokens)
+        return OntologyProcessor.find_best_topic(topic_name, topic, tokens)
 
