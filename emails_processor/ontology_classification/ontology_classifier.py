@@ -55,7 +55,7 @@ class OntologyClassifier:
         significant_lines = [match.group(1) for match in type_regx.finditer(header)]
         significant_tokens = set()
         for line in significant_lines:
-            significant_tokens |= set(re.split(r'[.,\s]', line))
+            significant_tokens |= set(re.split(r'[.,\s-]', line))
 
         significant_tokens = [self.lemmatizer.lemmatize(token).lower() for token in significant_tokens]
         significant_tokens = [TextProcessor.clean(token).lower() for token in significant_tokens]
