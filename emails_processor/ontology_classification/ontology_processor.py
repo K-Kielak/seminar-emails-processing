@@ -28,11 +28,12 @@ class OntologyProcessor:
         return {TextProcessor.clean(keyword) for keyword in lemmatized_keywords}
 
     @staticmethod
-    def add_to_others(topic, seminar):
+    def add_to_topic(topic, seminar):
         if OntologyProcessor.is_leaf(topic):
-            raise ValueError('Given topic is a leaf node so its already classified, it does not have child topics')
+            topic[seminars_label].update(seminar)
+        else:
+            topic[others_label][seminars_label].update(seminar)
 
-        topic[others_label].update(seminar)
         return topic
 
     @staticmethod
@@ -108,11 +109,3 @@ class OntologyProcessor:
             seminars |= OntologyProcessor.extract_topic_seminars(topic)
 
         return seminars
-
-    @staticmethod
-    def extract_others(topic):
-        if OntologyProcessor.is_leaf(topic):
-            raise ValueError('Given topic is a leaf node so its already '
-                             'classified, it does not have child topics')
-
-        return topic[others_label]
