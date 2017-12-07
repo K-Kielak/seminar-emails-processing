@@ -1,14 +1,12 @@
 import re
-
 import nltk
 from dateutil import parser as date_parser
-
 from emails_processor.data_extraction.text_processor import TextProcessor
 from emails_processor.regular_expressions import *
 
 
 class DataExtractor:
-    def __init__(self, seminar_files, names_file):
+    def __init__(self, seminar_files):
         nltk.download('averaged_perceptron_tagger')
 
         # names_content = names_file.readlines()

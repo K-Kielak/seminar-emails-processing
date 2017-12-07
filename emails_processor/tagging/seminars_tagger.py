@@ -1,5 +1,4 @@
 import re
-
 from dateutil import parser as time_parser
 from nltk.tokenize import sent_tokenize
 from emails_processor.data_extraction.data_extractor import DataExtractor
@@ -9,8 +8,8 @@ from emails_processor.regular_expressions import *
 
 
 class SeminarsTagger:
-    def __init__(self, seminar_files, names_file):
-        self.data_extractor = DataExtractor(seminar_files, names_file)
+    def __init__(self, seminar_files):
+        self.data_extractor = DataExtractor(seminar_files)
 
     def tag_seminar(self, seminar_file):
         seminar = seminar_file.read().strip('\n -*')

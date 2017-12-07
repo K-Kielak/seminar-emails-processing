@@ -1,5 +1,4 @@
 from tabulate import tabulate
-
 from emails_processor.data_extraction.text_processor import TextProcessor
 from emails_processor.tagging.seminars_tagger import SeminarsTagger
 
@@ -38,7 +37,6 @@ def evaluate(tagsets, test_tagsets):
 # given
 training_files_range = range(0, 301)
 training_files_root = '../../data/training/'
-names_file_root = '../../data/names/'
 test_files_range = range(301, 485)
 untagged_files_root = '../../data/test_untagged/'
 tagged_test_files_root = '../../data/test_tagged/'
@@ -70,10 +68,9 @@ test_speakers = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'speaker
 
 # get tags content for the program
 training_files = [open('{}{}.txt'.format(training_files_root, i), 'r') for i in training_files_range]
-names_file = open('{}names.txt'.format(names_file_root), 'r')
 untagged_files = [open('{}{}.txt'.format(untagged_files_root, i), 'r') for i in test_files_range]
 
-tagger = SeminarsTagger(training_files, names_file)
+tagger = SeminarsTagger(training_files)
 tagged_seminars = [tagger.tag_seminar(seminar) for seminar in untagged_files]
 
 paragraphs = [TextProcessor.extract_xml_tags_content(tagged_seminar, 'paragraph',
