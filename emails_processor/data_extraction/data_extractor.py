@@ -9,10 +9,6 @@ class DataExtractor:
     def __init__(self, seminar_files):
         nltk.download('averaged_perceptron_tagger')
 
-        # names_content = names_file.readlines()
-        # self.names = {line.strip().lower() for line in names_content}
-        # print(self.names)
-
         seminars = [file.read() for file in seminar_files]
         self.known_speakers = set()
         self.known_locations = set()
@@ -75,7 +71,6 @@ class DataExtractor:
         # tagged_ners = self.extract_ners(tagged_body)
         # ners = {re.sub(pos_tags_regx_str, '', ner).strip() for ner in tagged_ners}
         # people = set(filter(lambda ner: any(ner_part.lower() in self.names for ner_part in ner.split(' ')), ners))
-        # #print(people)
         # people = set(filter(lambda person: all(person_part.lower() not in titled_person.lower()
         #                                        for person_part in person.split(' ')
         #                                        for titled_person in titled_people), people))

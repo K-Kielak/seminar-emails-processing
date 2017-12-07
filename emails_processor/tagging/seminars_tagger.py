@@ -81,7 +81,6 @@ class SeminarsTagger:
     def tag_speakers(self, text, speakers):
         for spk in speakers:
             insensitive_spk = re.compile(r'({})'.format(re.escape(spk)))
-            # print(insensitive_loc)
             text = re.sub(insensitive_spk, r'<speaker>\1</speaker>', text)
 
         return text

@@ -4,7 +4,6 @@ from emails_processor.tagging.seminars_tagger import SeminarsTagger
 
 
 def evaluate(tagsets, test_tagsets):
-    print('********************************************')
     true_positivies = 0 # exists in both tagset and test_tagset
     false_positives = 0 # exists in tagset but does not exist in test_tagset
     false_negatives = 0 # does not exist in tagset but exists in test_tagset
@@ -16,16 +15,11 @@ def evaluate(tagsets, test_tagsets):
                 true_positivies += 1
             else:
                 false_positives += 1
-                print(tag + ' (wrong, seminar {})'.format(i))
 
         for test_tag in test_set:
             if test_tag not in set:
                 false_negatives += 1
-                print(test_tag + ' (not catched, seminar {})'.format(i))
 
-    # print(true_positivies)
-    # print(false_negatives)
-    # print(false_positives)
     precision = true_positivies / (true_positivies + false_positives)
     recall = true_positivies / (true_positivies + false_negatives)
     f_measure = 0
@@ -100,7 +94,6 @@ etime_stats = evaluate(etimes, test_etimes)
 stime_stats = evaluate(stimes, test_stimes)
 location_stats = evaluate(locations, test_locations)
 speakers_stats = evaluate(speakers, test_speakers)
-# spk_precision, spk_recall, spk_f_measure = evaluate(speakers, test_speakers)
 print(tabulate([('paragraph',) + paragraph_stats,
                 ('sentence',) + sentence_stats,
                 ('etime',) + etime_stats,
