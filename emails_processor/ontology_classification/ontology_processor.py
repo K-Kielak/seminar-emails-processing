@@ -1,12 +1,19 @@
-import nltk
 import operator
+import nltk
+from nltk.corpus import brown
 from nltk.stem.wordnet import WordNetLemmatizer
+from gensim.models import Word2Vec
 from emails_processor.ontology_classification.ontology import *
 from emails_processor.data_extraction.text_processor import TextProcessor
 
+word2vec_weight = 0.0001
+classification_threshold = 1
 
 class OntologyProcessor:
     nltk.download('wordnet')
+    nltk.download('brown')
+    word2vec = Word2Vec(brown.sents())
+    print('word2vec ready')
     _lemmatizer = WordNetLemmatizer()
 
     @staticmethod
@@ -59,11 +66,11 @@ class OntologyProcessor:
             strengths[key] = 0
             keywords = OntologyProcessor.extract_topic_keywords(obj)
             for token, count in significant_tokens.items():
-                if token in keywords:
-                    strengths[key] += count
+                for keyword in keywords:
+                    strengths[key] += count*OntologyProcessor._calculate_similarity(token, keyword)
 
         best_subtopic_name, best_subtopic_strength = max(strengths.items(), key=operator.itemgetter(1))
-        if best_subtopic_strength is 0:
+        if best_subtopic_strength < classification_threshold:
             return topic_name, topic
 
         return OntologyProcessor.find_best_topic(best_subtopic_name, topic[best_subtopic_name], significant_tokens)
@@ -123,3 +130,14 @@ class OntologyProcessor:
             seminars_count = len(OntologyProcessor.extract_topic_seminars(obj))
             print('{}{}({})'.format(indentation, key, str(seminars_count)))
             OntologyProcessor.pprint_seminars_count(obj, indentation_count+2)
+
+    @staticmethod
+    def _calculate_similarity(w1, w2):
+        if w1 == w2:
+            return 1
+
+        try:
+            similarity = OntologyProcessor.word2vec.similarity(w1, w2)
+            return similarity * word2vec_weight
+        except KeyError:
+            return 0
