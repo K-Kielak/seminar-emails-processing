@@ -18,3 +18,5 @@ start_time_regx_str = r'(?:\bTime\b:\s*)({0})'
 
 # pos_ner_regx_str = r'((?:[\w\.]+?{\*NNP\*}\s{0,3}){2,4})'
 pos_tags_regx_str = r'{\*.+?\*}'
+
+type_regx_str = r'(?:\b(?:Type|Topic|What)\b:\s*)(.*)'
