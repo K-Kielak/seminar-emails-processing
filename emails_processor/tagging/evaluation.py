@@ -30,7 +30,7 @@ def evaluate(tagsets, test_tagsets):
     recall = true_positivies / (true_positivies + false_negatives)
     f_measure = 0
     if precision + recall > 0:
-        f_measure = (precision * recall) / (precision + recall)
+        f_measure = 2 * (precision * recall) / (precision + recall)
 
     return precision, recall, f_measure
 
