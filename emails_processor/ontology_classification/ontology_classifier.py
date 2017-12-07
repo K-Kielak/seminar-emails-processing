@@ -38,7 +38,17 @@ class OntologyClassifier:
 
         return topic_name, topic
 
-    # Try to classify seminar based on its header, return None if unsuccessful
+    def get_seminars_for_topic(self, topic_name):
+        topic = OntologyProcessor.extract_topic(topic_name, self.ontology)
+        if not topic:
+            raise ValueError('Topic {} doesn\'t exist in the given ontology'.format(topic_name))
+
+        return OntologyProcessor.extract_topic_seminars(topic)
+
+    def pprint(self, indentation_count=0):
+        OntologyProcessor.pprint_seminars_count(self.ontology, indentation_count)
+
+    # Try to classify seminar based on its header
     def _analyze_header(self, header):
         type_regx = re.compile(type_regx_str, re.IGNORECASE)
         significant_lines = [match.group(1) for match in type_regx.finditer(header)]

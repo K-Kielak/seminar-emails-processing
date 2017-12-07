@@ -7,5 +7,7 @@ files = [open('{}{}.txt'.format(root, i), 'r') for i in files_range]
 
 classifier = OntologyClassifier(seminars_ontology)
 for f in files:
-    print(classifier.add(f))
+    classifier.add(f)
 
+print('\nClassified seminars count per topic:')
+classifier.pprint(2)

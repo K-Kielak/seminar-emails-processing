@@ -30,9 +30,9 @@ class OntologyProcessor:
     @staticmethod
     def add_to_topic(topic, seminar):
         if OntologyProcessor.is_leaf(topic):
-            topic[seminars_label].update(seminar)
+            topic[seminars_label] |= {seminar}
         else:
-            topic[others_label][seminars_label].update(seminar)
+            topic[others_label][seminars_label] |= {seminar}
 
         return topic
 
@@ -41,7 +41,7 @@ class OntologyProcessor:
         if type(topic) is not dict:
             raise ValueError('Passed argument is not a topic')
 
-        if len(topic.items()) <= 2 and topic.get(keywords_label):
+        if len(topic.items()) <= 2 and topic.get(keywords_label) is not None:
             return True
 
         return False
@@ -102,10 +102,24 @@ class OntologyProcessor:
             return topic[seminars_label]
 
         seminars = set()
-        for _, subtopic in topic.items:
+        for _, subtopic in topic.items():
             if type(subtopic) is not dict:
                 continue
 
-            seminars |= OntologyProcessor.extract_topic_seminars(topic)
+            seminars |= OntologyProcessor.extract_topic_seminars(subtopic)
 
         return seminars
+
+    @staticmethod
+    def pprint_seminars_count(ontology, indentation_count=0):
+        indentation = ' ' * indentation_count
+        if indentation_count > 0:
+            indentation = indentation + '- '
+
+        for key, obj in ontology.items():
+            if type(obj) is not dict:
+                continue
+
+            seminars_count = len(OntologyProcessor.extract_topic_seminars(obj))
+            print('{}{}({})'.format(indentation, key, str(seminars_count)))
+            OntologyProcessor.pprint_seminars_count(obj, indentation_count+2)
